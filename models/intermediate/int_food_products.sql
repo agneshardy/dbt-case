@@ -8,12 +8,11 @@ carbon_table as (
 
 combined_info as (
     SELECT
-        t1.FoodID,
-        t1.foodname
-        t1.foodnavn,
-        t2.name,
-        t2.category,
-        t2.total_carbon_footprint
+        FoodID as id,
+        MAX(foodnavn) as navn,
+        MAX(name) as name,
+        MAX(category) as category,
+        MAX(total_carbon_footprint) as total_carbon_footprint
     FROM
         base_table as t1
     JOIN
@@ -21,7 +20,7 @@ combined_info as (
     ON
         t2.name ILIKE '%' || t1.foodnavn || '%'
     group by 
-        t1.foodid, t1.foodnavn, t2.name, t2.total_carbon_footprint, t2.category
+        foodid
 )
 
 

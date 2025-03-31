@@ -38,7 +38,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   leap_case_project: 
     +materialized: table
-    food: 
+    stg: 
+      +materialized: table
+    intermediate: 
       +materialized: table
     
 

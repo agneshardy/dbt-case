@@ -12,9 +12,11 @@ nutrition as (
 
 items AS (
     SELECT 
-        n.*
+        foodid, foodname, nutritionvalue
     FROM nutrition n
     JOIN proteinId p ON n.ParameterID = p.id
+    group by foodid, foodname, nutritionvalue
+
 )
 
-select * from items 
+select * from items

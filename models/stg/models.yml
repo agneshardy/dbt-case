@@ -1,14 +1,53 @@
 models: 
-  - name: food_info
-    description: Food info from DTU database
+  - name: stg_food_carbon
+    description: "Data from klimadatabasen."
     columns:
       - name: id
-        tests:
-          - unique, not_null
-  - name: food_carbon
-    description: Data from klimadatabasen 
+        description: "Their ID for the food item. This is not used outside of stg."
+      - name: total_carbon_footprint
+        description: "Total carbon footprint in kg."
+      - name: name
+        description: "food name."
+      - name: category
+        description: "Category such as 'grøntsager' or 'brød og bagværk'"
+    tests:
+      - not_null:
+          column_name: id
+      #- accepted_values: 
+      #    values:
+      #      - "Grøntsager og grøntsagsprodukter"
+      #      - "Kød og fjerkræ"
+      #      - "Vin, øl og spiritus"
+      #      - "Brød og bageartikler"
+      #      - "Korn og kornprodukter"
+      #      - "Mælk, mejeriprodukter og æg"
+      #      - "Drikkevarer"
+      #      - "Smagsgivere og krydderier"
+      #      - "Fisk og skaldyr"
+      #      - "Frugt og frugtprodukter"
+      #      - "Planteprodukter og -drikke"
+      #      - "Bælgfrugter og bælgfrugtprodukter"
+      #      - "Svampe og svampeprodukter"
+      #      - "Færdigretter"
+      #      - "Slik og sukkervarer"
+      #      - "Nødder og frø"
+
+  - name: stg_food_info
+    description: "Food info from DTU database."
     columns:
-      - name: id
-        tests:
-          - unique
-          - not_null
+      - name: foodid
+        description: "Unique identifier for the food item."
+      - name: name
+        description: "Name of the food item."
+      - name: parameterid
+        description: "Nutritional parameter ID."
+      - name: parametername
+        description: "Nutritional parameter (e.g., Protein, Carbs, etc.)."
+      - name: nutritionvalue
+        description: "Nutritional value for the food item of the parameter."
+    tests:
+      - not_null:
+          column_name: foodid
+      - not_null:
+          column_name: nutritionvalue
+

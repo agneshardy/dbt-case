@@ -1,2 +1,71 @@
-models: 
-  - name: food_nutrition 
+version: 2
+
+models:
+  - name: int_food_nutrition
+    description: "Table of all nutrition values (protein, carbs, A vitamin, Iron etc. ) for each food item."
+    columns:
+      - name: foodid
+        description: "Food item ID."
+      - name: parameterid
+        description: "Nutritional parameter ID (e.g., protein, carbs, etc.)."
+      - name: nutritionvalue
+        description: "The nutritional value (g/100 g) for the food item."
+    tests:
+      - dbt_utils.unique_combination_of_columns: # test composite key
+          combination_of_columns:
+            - foodid
+            - parameterid
+      - not_null:
+          column_name: nutritionvalue
+      
+
+  - name: int_food_nutrition_carbon_ratio
+    description: "Calculates the nutrition to carbon footprint ratio for each food item."
+    columns:
+      - name: id
+        description: "Id for the food item."
+      - name: nutritionvalue
+        description: "Nutritional value of the given nutritional parameter measured in grams per 100 g."
+      - name: total_carbon_footprint
+        description: "The total carbon footprint per food item in kg."
+      - name: nutrition_per_footprint_ratio
+        description: "The ratio of nutritional value to carbon footprint. The nutritional value is transformed to pr. kg. first"
+    tests:
+      - unique:
+          column_name: id
+      - not_null:
+          column_name: total_carbon_footprint
+      - not_null: 
+          column_name: nutritionvalue
+
+  - name: int_food_protein_nutrition
+    description: "Calculates specifically protein values for food items."
+    columns:
+      - name: foodid
+        description: "ID for the food item."
+      - name: foodname
+        description: "name of the food item."
+      - name: nutritionvalue
+        description: "Amount of protein (in grams) for each food item."
+    tests:
+      - unique:
+          column_name: foodid
+      - not_null:
+          column_name: nutritionvalue
+
+  - name: int_food_products
+    description: "data on food items, including their carbon footprint and category."
+    columns:
+      - name: id
+        description: "Unique identifier for the food item."
+      - name: name
+        description: "Name of the food item."
+      - name: total_carbon_footprint
+        description: "Total carbon footprint for the food item in kg."
+      - name: category
+        description: "Category of the food item, provided by klimadatabasen."
+    tests:
+      - unique:
+          column_name: id
+      - not_null:
+          column_name: total_carbon_footprint

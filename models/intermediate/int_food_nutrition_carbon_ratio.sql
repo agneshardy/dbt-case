@@ -1,5 +1,11 @@
 -- query foods and a nutritional value to carbon foot print ratio sorted by (nutritional value / carbon foot print) 
 
+-- Currently, I am using view as the materialization strategy, because this model may be used for changing nutrition parameters, 
+-- so it should not necessarily be materialized as tables each time it is run
+{{ config(
+    materialized='view'
+) }}
+
 with food_nutrition as (
     select * from {{ ref("int_food_nutrition")}}
 ),
@@ -20,14 +26,12 @@ nutrition as (
     from food_nutrition as food
     join parameter as p
     on food.parameterid = p.id
-    where food.nutritionvalue > {{ COALESCE(var("lowerbound"), 0)}}
-    group by 
-        foodid, name, nutritionvalue
+    where food.nutritionvalue > COALESCE({{ var("lowerbound") }}, 0)
 ),
 
 food_info as (
     select 
-        foodid, 
+        id, 
         name,
         total_carbon_footprint
     from {{ ref("int_food_products")}}
@@ -35,21 +39,27 @@ food_info as (
 
 carbon_ratio as (
     select 
-        food.foodid,
+        food.id as id,
         food.name,
         food.total_carbon_footprint,
         nutrition.nutritionvalue,
-        ROUND((COALESCE(nutrition.nutritionvalue, 0) * 10) / COALESCE(food.total_carbon_footprint, 1), 2) AS nutrition_per_footprint_ratio
+        ROUND((COALESCE(nutrition.nutritionvalue, 0) * 10) / COALESCE(NULLIF(food.total_carbon_footprint, 0), 1), 2) AS nutrition_per_footprint_ratio
     from food_info as food 
     join nutrition 
-    on food.foodid = nutrition.foodid
+    on food.id = nutrition.foodid
 )
 
 select 
-    foodid as id,
+    id,
     name,
     total_carbon_footprint,
     nutritionvalue, 
     nutrition_per_footprint_ratio
 from carbon_ratio
-order by nutrition_per_footprint_ratio desc
+group by 
+    id,
+    name,
+    total_carbon_footprint,
+    nutritionvalue, 
+    nutrition_per_footprint_ratio
+order by nutrition_per_footprint_ratio desc 
