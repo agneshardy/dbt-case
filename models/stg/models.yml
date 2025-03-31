@@ -1,0 +1,14 @@
+models: 
+  - name: food_info
+    description: Food info from DTU database
+    columns:
+      - name: id
+        tests:
+          - unique, not_null
+  - name: food_carbon
+    description: Data from klimadatabasen 
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
