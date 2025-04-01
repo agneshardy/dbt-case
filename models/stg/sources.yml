@@ -1,0 +1,10 @@
+sources:
+  - name: food
+    description: Food source from Snowflake
+    database: raw
+    schema: food
+    tables: 
+      - name: products
+        description: Food products with nutrition info.
+      - name: klimadatabase
+        description: Food information with climate and category data

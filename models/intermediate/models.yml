@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: int_food_nutrition
+    description: "Table of all nutrition values (protein, carbs, A vitamin, Iron etc. ) for each food item."
+    columns:
+      - name: foodid
+        description: "Food item ID."
+      - name: parameterid
+        description: "Nutritional parameter ID (e.g., protein, carbs, etc.)."
+      - name: nutritionvalue
+        description: "The nutritional value (g/100 g) for the food item."
+    tests:
+      - dbt_utils.unique_combination_of_columns: # test composite key
+          combination_of_columns:
+            - foodid
+            - parameterid
+      - not_null:
+          column_name: nutritionvalue
+
+  - name: int_food_products
+    description: "data on food items, including their carbon footprint and category."
+    columns:
+      - name: id
+        description: "Unique identifier for the food item."
+      - name: name
+        description: "Name of the food item."
+      - name: total_carbon_footprint
+        description: "Total carbon footprint for the food item in kg."
+      - name: category
+        description: "Category of the food item, provided by klimadatabasen."
+    tests:
+      - unique:
+          column_name: id
+      - not_null:
+          column_name: total_carbon_footprint

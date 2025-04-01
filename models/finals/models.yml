@@ -1,0 +1,34 @@
+models: 
+  - name: int_food_nutrition_carbon_ratio
+    description: "Calculates the nutrition to carbon footprint ratio for each food item."
+    columns:
+      - name: id
+        description: "Id for the food item."
+      - name: nutritionvalue
+        description: "Nutritional value of the given nutritional parameter measured in grams per 100 g."
+      - name: total_carbon_footprint
+        description: "The total carbon footprint per food item in kg."
+      - name: nutrition_per_footprint_ratio
+        description: "The ratio of nutritional value to carbon footprint. The nutritional value is transformed to pr. kg. first"
+    tests:
+      - unique:
+          column_name: id
+      - not_null:
+          column_name: total_carbon_footprint
+      - not_null: 
+          column_name: nutritionvalue
+
+  - name: int_food_protein_nutrition
+    description: "Calculates specifically protein values for food items."
+    columns:
+      - name: foodid
+        description: "ID for the food item."
+      - name: foodname
+        description: "name of the food item."
+      - name: nutritionvalue
+        description: "Amount of protein (in grams) for each food item."
+    tests:
+      - unique:
+          column_name: foodid
+      - not_null:
+          column_name: nutritionvalue
