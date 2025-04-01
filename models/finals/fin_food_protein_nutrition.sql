@@ -7,7 +7,14 @@ with proteinId as (
 ),
 
 nutrition as (
-    select * from {{ ref("stg_food_info")}}
+    select 
+        n.foodID, 
+        f.name as foodname,
+        n.ParameterID,
+        n.nutritionvalue 
+    from {{ ref("int_food_nutrition")}} as n
+    join {{ ref("int_food_products")}} as f
+    on n.foodid = f.id
 ),
 
 items AS (
